@@ -48,7 +48,7 @@ def predict():
         result = "Congratulations! Your loan application has been approved." if prediction[0] == 1 else "Sorry, your loan application has been denied."
         return jsonify({'result': result, 'loan_amount': loan_amount})
     except Exception as e:
-        print(f'Error during prediction: {e}')  # Log the error
+        print(f'Error during prediction: {e}')
         return jsonify({'error': str(e)}), 500
 
 if __name__ == '__main__':

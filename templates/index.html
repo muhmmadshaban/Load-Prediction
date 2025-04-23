@@ -136,6 +136,19 @@
   document.getElementById('loanForm').addEventListener('submit', function(e) {
     e.preventDefault();
     const formData = new FormData(this);
+    
+    // Get the loan amount and term
+    const loanAmount = parseFloat(document.getElementById('loan_amount').value);
+    const applicant_income = parseFloat(document.getElementById('applicant_income').value);
+    const coapplicant_income = parseFloat(document.getElementById('coapplicant_income').value);
+ 
+    
+    // Modify the loan amount and term
+    formData.set('LoanAmount', loanAmount / 80); // Divide loan amount by 80
+    formData.set('CoapplicantIncome', coapplicant_income / 80); // Divide coapplicant income by 80
+    formData.set('ApplicantIncome', applicant_income / 80); // Divide applicant income by 80
+
+
     fetch('/predict', {
       method: 'POST',
       body: formData
@@ -147,8 +160,9 @@
       return response.json();
     })
     .then(data => {
+      const approvedAmount = data.result === "Congratulations! Your loan application has been approved." ? loanAmount : 0;
       document.getElementById('loanStatus').textContent = data.result;
-      document.getElementById('approvedAmount').textContent = `₹${data.loan_amount}`;
+      document.getElementById('approvedAmount').textContent = `₹${approvedAmount}`;
       document.getElementById('loanForm').style.display = 'none';
       document.getElementById('resultContainer').style.display = 'block';
     })
