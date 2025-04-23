@@ -7,7 +7,7 @@ app = Flask(__name__)
 
 # Load the model
 try:
-    model = joblib.load(r"C:\Users\Muhmmad shaban\Downloads\Loan_model6.pkl")
+    model = joblib.load(r"Loan_model6.pkl")
     print(f'Model loaded successfully: {type(model)}')  # Check the type of the loaded model
 except Exception as e:
     print(f'Error loading model: {e}')
