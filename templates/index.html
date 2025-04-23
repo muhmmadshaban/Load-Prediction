@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Loan Application Prediction</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f6f8;
+      padding: 20px;
+    }
+    .form-container {
+      background-color: #fff;
+      padding: 25px;
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      max-width: 600px;
+      margin: auto;
+    }
+    .form-container h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: bold;
+    }
+    input, select {
+      width: 100%;
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    button {
+      background-color: #007bff;
+      color: white;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      width: 100%;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+
+<div class="form-container">
+  <h2>Loan Application Prediction</h2>
+  <form id="loanForm">
+    <div class="form-group">
+      <label for="gender">Gender</label>
+      <select id="gender" name="Gender" required>
+        <option value="">Select</option>
+        <option value="Male">Male</option>
+        <option value="Female">Female</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="married">Married</label>
+      <select id="married" name="Married" required>
+        <option value="">Select</option>
+        <option value="Yes">Yes</option>
+        <option value="No">No</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="dependents">No. of Dependents</label>
+      <input type="text" id="dependents" name="Dependents" required>
+    </div>
+    <div class="form-group">
+      <label for="education">Education</label>
+      <select id="education" name="Education" required>
+        <option value="">Select</option>
+        <option value="1">Graduate</option>
+        <option value="0">Not Graduate</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="self_employed">Self Employed</label>
+      <select id="self_employed" name="Self_Employed" required>
+        <option value="">Select</option>
+        <option value="1">Yes</option>
+        <option value="0">No</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="applicant_income">Applicant Income</label>
+      <input type="number" id="applicant_income" name="ApplicantIncome" required>
+    </div>
+    <div class="form-group">
+      <label for="coapplicant_income">Coapplicant Income</label>
+      <input type="number" id="coapplicant_income" name="CoapplicantIncome" required>
+    </div>
+    <div class="form-group">
+      <label for="loan_amount">Loan Amount</label>
+      <input type="number" id="loan_amount" name="LoanAmount" required>
+    </div>
+    <div class="form-group">
+      <label for="loan_amount_term">Loan Amount Term (In Years)</label>
+      <input type="number" id="loan_amount_term" name="Loan_Amount_Term" required>
+    </div>
+    <div class="form-group">
+      <label for="credit_history">Credit History</label>
+      <select id="credit_history" name="Credit_History" required>
+        <option value="">Select</option>
+        <option value="1">Yes</option>
+        <option value="0">No</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="property_area">Property Area</label>
+      <select id="property_area" name="Property_Area" required>
+        <option value="">Select</option>
+        <option value="0">Urban</option>
+        <option value="1">Semiurban</option>
+        <option value="2">Rural</option>
+      </select>
+    </div>
+    <button type="submit">Submit</button>
+  </form>
+  <div id="resultContainer" style="display: none; margin-top: 20px; padding: 15px; background-color: #d4edda; color: #155724; border-radius: 5px; text-align: center;">
+    <h3>Loan Application Status</h3>
+    <p id="loanStatus"></p>
+    <p>Loan Amount: <span id="approvedAmount"></span></p>
+  </div>
+</div>
+
+<script>
+  document.getElementById('loanForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const formData = new FormData(this);
+    fetch('/predict', {
+      method: 'POST',
+      body: formData
+    })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok ' + response.statusText);
+      }
+      return response.json();
+    })
+    .then(data => {
+      document.getElementById('loanStatus').textContent = data.result;
+      document.getElementById('approvedAmount').textContent = `₹${data.loan_amount}`;
+      document.getElementById('loanForm').style.display = 'none';
+      document.getElementById('resultContainer').style.display = 'block';
+    })
+    .catch(error => console.error('Error:', error));
+  });
+</script>
+
+</body>
+</html>
